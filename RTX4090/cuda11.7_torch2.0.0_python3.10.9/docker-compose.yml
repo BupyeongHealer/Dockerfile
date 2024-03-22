@@ -1,0 +1,30 @@
+#docker-compose.yml
+version: '3.8'
+  
+services:
+   main:
+       container_name: soccerNet_container
+       build:
+            context: ./
+            dockerfile: Dockerfile
+       runtime: nvidia
+       restart: always
+       env_file:
+         - "docker-compose-env/main.env"
+       volumes:
+         # - /media/mmlab/hdd:/hdd
+         - ./notebooks:/notebooks  # Jupyter Notebook의 노트북 파일을 저장할 디렉토리
+         - ./data:/data            # 파일 저장할 디렉토리 (왼쪽이 local, 오른쪽 container 내)
+       expose:
+         - "8000"
+         - "22"
+       ports:
+         - "30004:8000"            # 호스트의 30001 포트를 컨테이너의 8000 포트로 매핑합니다
+         - "30005:22"
+         - "30006:6006"
+       # mem_limit: '6144M'
+       # memswap_limit: '6144M'
+       ipc: host
+       stdin_open: true
+       tty: true
+       # restart: always           # 컨테이너가 비정상적으로 종료되었을 때 항상 다시 시작합니다.
